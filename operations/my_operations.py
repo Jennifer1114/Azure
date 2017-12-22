@@ -1,36 +1,5 @@
 import models.data.pgm_core_data as data
-
-# Type Names
-VIRTUAL_NETWORKS = 'Microsoft.Network/virtualNetworks'
-VIRTUAL_NETWORK_PEERINGS = 'Microsoft.Network/virtualNetworkPeerings'
-VIRTUAL_NETWORK_GATEWAYS = 'Microsoft.Network/virtualNetworkGateways'
-VIRTUAL_NETWORK_GATEWAY_CONNECTIONS = 'Microsoft.Network/virtualNetworkGatewayConnections'
-
-SUBNETS = 'Microsoft.Network/subnets'
-ROUTES = 'Microsoft.Network/routes'
-ROUTE_TABLES = 'Microsoft.Network/routeTables'
-ROUTE_FILTERS = 'Microsoft.Network/routeFilters'
-ROUTE_FILTER_RULES = 'Microsoft.Network/routeFilterRules'
-
-PUBLIC_IP_ADDRESSES = 'Microsoft.Network/publicIPAddresses'
-NETWORK_SECURITY_GROUPS = 'Microsoft.Network/networkSecurityGroups'
-NETWORK_INTERFACES = 'Microsoft.Network/networkInterfaces'
-NETWORK_INTERFACE_LOAD_BALANCERS = 'Microsoft.Network/networkInterfaceLoadBalancers'
-NETWORK_INTERFACE_IP_CONFIGURATIONS = 'Microsoft.Network/networkInterfaceIpConfigurations'
-
-LOCAL_NETWORK_GATEWAYS = 'Microsoft.Network/localNetworkGateways'
-LOAD_BALANCERS = 'Microsoft.Network/loadBalancers'
-LOAD_BALANCER_PROBES = 'Microsoft.Network/loadBalancerProbes'
-LOAD_BALANCER_NETWORK_INTERFACES = 'Microsoft.Network/loadBalancerNetworkInterfaces'
-LOAD_BALANCER_LOAD_BALANCING_RULES = 'Microsoft.Network/loadBalancerLoadBalancingRules'
-LOAD_BALANCER_FRONTEND_IP_CONFIGURATIONS = 'Microsoft.Network/loadBalancerFrontendIpConfigurations'
-LOAD_BALANCER_BACKEND_ADDRESS_POOLS = 'Microsoft.Network/loadBalancerBackendAddressPools'
-INBOUND_NAT_RULES = 'Microsoft.Network/inboundNatRules'
-
-EXPRESS_ROUTE_SERVICE_PROVIDERS = 'Microsoft.Network/expressRouteServiceProviders'
-EXPRESS_ROUTE_CIRCUITS = 'Microsoft.Network/expressRouteCircuits'
-EXPRESS_ROUTE_CIRCUIT_PEERINGS = 'Microsoft.Network/expressRouteCircuitPeerings'
-EXPRESS_ROUTE_CIRCUIT_AUTHORIZATIONS = 'Microsoft.Network/expressRouteCircuitAuthorizations'
+import models.data.parameters as parameters
 
 # Resource ID Construction
 # ************************
@@ -96,43 +65,40 @@ def print_item(resource):
     :param resource: azure resource object
     :return: none
     """
-    print('\nName: {}\n'.format(resource.name),
-          '\tId: {}\n'.format(resource.id),
-          '\tLocation: {}\n'.format(resource.location),
-          '\tProperties:')
-
-    if hasattr(resource, 'properties'):
-        print_properties(resource.properties)
+    print('\nName: {}'
+          '\n\tId: {}'
+          '\n\tProvisioning State: {}'.format(resource.name,
+                                              resource.id,
+                                              resource.provisioning_state)
+          )
 
     if hasattr(resource, 'type'):
-        print_parameters(resource, resource.type)
+        print('\t\tParameters:')
+        print_parameters(resource, 0)
 
 
-def print_properties(properties):
-    """
-    Print resource properties.
-
-    :param properties: subset of azure resource object instance parameters
-    :return: none
-    """
-    if properties and properties.provisioning_state:
-        print('\t\tProvisioning State: '
-              '{}\n'.format(properties.provisioning_state))
-
-
-def print_parameters(resource, type):
+def print_parameters(resource, level=0):
     """
     Print resource parameters based on type.
 
     :param resource: azure resource object instance
-    :param type: resource type
+    :param level: recursively track stuff
     :return: none
     """
-    print('\t\tProvisioning State: ',
-          '{}'.format(resource.__dict__['provisioning_state']))
+    # param_list = []
+    #
+    # for key, value in resource.__dict__.items():
+    #     if key == 'type':
+    #         param_list = parameters.params_by_type[value]
 
-    if type == LOAD_BALANCERS:
-        print('\t\tFrontend IP Configurations: ')
-        for config in resource.__dict__['frontend_ip_configurations']:
-            print('\t\t\t{}\n'.format(config.private_ip_allocation_method))
+    # for key, value in resource.__dict__.items():
+    #     # if key in param_list:
+    #     print('\t\t\t{}: {}'.format(key, value))
 
+    for attr in dir(resource):
+        if attr != '__doc__' and attr != '__module__':
+            val = getattr(resource, attr)
+            if isinstance(val, (int, str, list, dict)):
+                print('{}: {}'.format(attr, val))
+            else:
+                print_parameters(val, level=level+1)

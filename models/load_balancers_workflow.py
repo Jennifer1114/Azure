@@ -54,13 +54,9 @@ print("Creating resource group...")
 
 rg_parameters = {'location': location}
 
-cumulus.create_update_resource_group(
-    GROUP_NAME,
-    rg_parameters)
-
-resource_set.append(
-    cumulus.get_resource_group(
-        GROUP_NAME))
+# cumulus.create_update_resource_group(
+#     GROUP_NAME,
+#     rg_parameters)
 
 
 # Create Public IP Address
@@ -71,10 +67,10 @@ print("Creating Public IP Address...")
 pip_parameters = {'location': location,
                   'public_ip_allocation_method': 'Static'}
 
-cumulus.create_update_public_ip_addresses(
-    GROUP_NAME,
-    PIP_NAME,
-    pip_parameters)
+# cumulus.create_update_public_ip_addresses(
+#     GROUP_NAME,
+#     PIP_NAME,
+#     pip_parameters)
 
 resource_set.append(
     cumulus.get_public_ip_addresses(

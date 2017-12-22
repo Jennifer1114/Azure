@@ -1672,4 +1672,196 @@ def delete_load_balancers(
         print(e)
 
 
+# Application Gateways Operations
+def create_update_application_gateways(
+        resource_group_name,
+        application_gateway_name,
+        parameters,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Creates or updates the specified application gateway.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param application_gateway_name: (str) – The name of the application
+        gateway.
+    :param parameters: (ApplicationGateway) – Parameters supplied to the create
+        or update application gateway operation.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns ApplicationGateway or
+        ClientRawResponse if raw=true
+    """
+    try:
+        ag_info = network_client.application_gateways.create_or_update(
+            resource_group_name,
+            application_gateway_name,
+            parameters,
+            custom_headers=None,
+            raw=None
+        )
+        ag_info.wait()
+        print(ag_info.result().provisioning_state)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def get_application_gateways(
+        resource_group_name,
+        application_gateway_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Gets the specified application gateway.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param application_gateway_name: (str) – The name of the application
+        gateway.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: ApplicationGateway or ClientRawResponse if raw=true
+    """
+    try:
+        ag_info = network_client.application_gateways.get(
+            resource_group_name,
+            application_gateway_name,
+            custom_headers=None,
+            raw=None
+        )
+        return (ag_info)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def delete_application_gateways(
+        resource_group_name,
+        application_gateway_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Deletes the specified application gateway.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param application_gateway_name: (str) – The name of the application
+        gateway.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns None or
+        ClientRawResponse if raw=true
+    """
+    try:
+        ag_info = network_client.application_gateways.delete(
+            resource_group_name,
+            application_gateway_name,
+            custom_headers=None,
+            raw=None
+        )
+        ag_info.wait()
+        print(ag_info.status())
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+# Network Watchers Operations
+def create_update_network_watchers(
+        resource_group_name,
+        network_watcher_name,
+        parameters,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Creates or updates a network watcher in the specified resource group.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_watcher_name: (str) – The name of the network watcher.
+    :param parameters: (NetworkWatcher) – Parameters that define the network
+        watcher resource.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: NetworkWatcher or ClientRawResponse if raw=true
+    """
+    try:
+        nw_info = network_client.network_watchers.create_or_update(
+            resource_group_name,
+            network_watcher_name,
+            parameters,
+            custom_headers=None,
+            raw=None
+        )
+        nw_info.wait()
+        print(nw_info.result().provisioning_state)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+def get_network_watchers(
+        resource_group_name,
+        network_watcher_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Gets the specified network watcher by resource group.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_watcher_name: (str) – The name of the network watcher.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: NetworkWatcher or ClientRawResponse if raw=true
+    """
+    try:
+        nw_info = network_client.network_watchers.get(
+            resource_group_name,
+            network_watcher_name,
+            custom_headers=None,
+            raw=None
+        )
+        return (nw_info)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+def delete_network_watchers(
+        resource_group_name,
+        network_watcher_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Deletes the specified network watcher resource.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_watcher_name: (str) – The name of the network watcher.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns None or
+        ClientRawResponse if raw=true
+    """
+    try:
+        nw_info = network_client.network_watchers.delete(
+            resource_group_name,
+            network_watcher_name,
+            custom_headers=None,
+            raw=None
+        )
+        nw_info.wait()
+        print(nw_info.status())
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
 # END OF CUMULUS.PY
