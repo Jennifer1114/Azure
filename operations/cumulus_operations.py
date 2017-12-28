@@ -1266,6 +1266,114 @@ def delete_network_security_groups(
     except azure_exceptions.CloudError as e:
         print(e)
 
+# Security Rules Operations
+def create_update_security_rules(
+        resource_group_name,
+        network_security_group_name,
+        security_rule_name,
+        parameters,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Creates or updates a security rule in the specified network security group.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_security_group_name: (str) – The name of the network
+        security group.
+    :param security_rule_name: (str) – The name of the security rule.
+    :param parameters: (SecurityRule) – Parameters supplied to the create or
+        update network security rule operation.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns SecurityRule or
+        ClientRawResponse if raw=true
+    """
+    try:
+        nsgr_info = network_client.security_rules.create_or_update(
+            resource_group_name,
+            network_security_group_name,
+            security_rule_name,
+            parameters,
+            custom_headers=None,
+            raw=None
+        )
+        nsgr_info.wait()
+        print(nsgr_info.result().provisioning_state)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def get_security_rules(
+        resource_group_name,
+        network_security_group_name,
+        security_rule_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Get the specified network security rule.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_security_group_name: (str) – The name of the network
+        security group.
+    :param security_rule_name: (str) – The name of the security rule.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: SecurityRule or ClientRawResponse if raw=true
+    """
+    try:
+        nsgr_info = network_client.security_rules.get(
+            resource_group_name,
+            network_security_group_name,
+            security_rule_name,
+            expand=None,
+            custom_headers=None,
+            raw=None
+        )
+        return (nsgr_info)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def delete_security_rules(
+        resource_group_name,
+        network_security_group_name,
+        security_rule_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Deletes the specified network security rule.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_security_group_name: (str) – The name of the network
+        security group.
+    :param security_rule_name: (str) – The name of the security rule.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns None or
+        ClientRawResponse if raw=true
+    """
+    try:
+        nsgr_info = network_client.security_rules.delete(
+            resource_group_name,
+            network_security_group_name,
+            security_rule_name,
+            custom_headers=None,
+            raw=None
+        )
+        nsgr_info.wait()
+        print(nsgr_info.status())
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
 
 # Express Route Circuits Operations
 def create_update_express_route_circuits(
@@ -1862,6 +1970,315 @@ def delete_network_watchers(
 
     except azure_exceptions.CloudError as e:
         print(e)
+
+
+def create_update_packet_captures(
+        resource_group_name,
+        network_watcher_name,
+        packet_capture_name,
+        parameters,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Create and start a packet capture on the specified VM.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_watcher_name: (str) – The name of the network watcher.
+    :param packet_capture_name: (str) – The name of the packet capture session.
+    :param parameters: (PacketCapture) – Parameters that define the create
+        packet capture operation.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns PacketCaptureResult or
+        ClientRawResponse if raw=true
+    """
+    try:
+        pc_info = network_client.packet_captures.create(
+            resource_group_name,
+            network_watcher_name,
+            packet_capture_name,
+            parameters,
+            custom_headers=None,
+            raw=None
+        )
+        pc_info.wait()
+        print(pc_info.result().provisioning_state)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def get_packet_captures(
+        resource_group_name,
+        network_watcher_name,
+        packet_capture_name,
+        custom_headers=None,
+        raw=None
+):
+    """
+    Gets a packet capture session by name.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_watcher_name: (str) – The name of the network watcher.
+    :param packet_capture_name: (str) – The name of the packet capture session.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: PacketCaptureResult or ClientRawResponse if raw=true
+    """
+    try:
+        pc_info = network_client.packet_captures.get(
+            resource_group_name,
+            network_watcher_name,
+            packet_capture_name,
+            custom_headers=None,
+            raw=None
+        )
+        return (pc_info)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def delete_packet_captures(
+        resource_group_name,
+        network_watcher_name,
+        packet_capture_name,
+        custom_headers=None,
+        raw=None
+):
+    """
+    Deletes the specified packet capture session.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param network_watcher_name: (str) – The name of the network watcher.
+    :param packet_capture_name: (str) – The name of the packet capture session.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns None or
+        ClientRawResponse if raw=true
+    """
+    try:
+        pc_info = network_client.packet_captures.delete(
+            resource_group_name,
+            network_watcher_name,
+            packet_capture_name,
+            custom_headers=None,
+            raw=None
+        )
+        pc_info.wait()
+        print(pc_info.status())
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+# Route Filters Operations
+def create_update_route_filters(
+        resource_group_name,
+        route_filter_name,
+        parameters,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Creates or updates a route filter in a specified resource group.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param route_filter_name: (str) – The name of the route filter.
+    :param parameters: (RouteFilter) – Parameters supplied to the create or
+        update route filter operation.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns RouteFilter or
+        ClientRawResponse if raw=true
+    """
+    try:
+        rf_info = network_client.route_filters.create_or_update(
+            resource_group_name,
+            route_filter_name,
+            parameters,
+            custom_headers=None,
+            raw=None
+        )
+        rf_info.wait()
+        print(rf_info.result().provisioning_state)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+def get_route_filters(
+        resource_group_name,
+        route_filter_name,
+        expand=None,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Gets the specified route filter.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param route_filter_name: (str) – The name of the route filter.
+    :param expand: (str) – Expands referenced express route bgp peering
+        resources.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the
+        deserialized response
+    :return: RouteFilter or ClientRawResponse if raw=true
+    """
+    try:
+        rf_info = network_client.route_filters.get(
+            resource_group_name,
+            route_filter_name,
+            expand=None,
+            custom_headers=None,
+            raw=None
+        )
+        return (rf_info)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def delete_route_filters(
+        resource_group_name,
+        route_filter_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Deletes the specified route filter.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param route_filter_name: (str) – The name of the route filter.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the
+        deserialized response
+    :return: AzureOperationPoller instance that returns None or
+        ClientRawResponse if raw=true
+    """
+    try:
+        rf_info = network_client.route_filters.delete(
+            resource_group_name,
+            route_filter_name,
+            custom_headers=None,
+            raw=None
+        )
+        rf_info.wait()
+        print(rf_info.status())
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+# Route Filter Rules Operations
+def create_update_route_filter_rules(
+        resource_group_name,
+        route_filter_name,
+        rule_name,
+        parameters,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Creates or updates a rule in the specified route filter.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param route_filter_name: (str) – The name of the route filter.
+    :param rule_name: (str) – The name of the route filter rule.
+    :param parameters: (RouteFilterRule) – Parameters supplied to the create or
+        update route filter rule operation.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns RouteFilterRule or
+        ClientRawResponse if raw=true
+    """
+    try:
+        rfr_info = network_client.route_filter_rules.create_or_update(
+            resource_group_name,
+            route_filter_name,
+            rule_name,
+            parameters,
+            custom_headers=None,
+            raw=None
+        )
+        rfr_info.wait()
+        print(rfr_info.result().provisioning_state)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def get_route_filter_rules(
+        resource_group_name,
+        route_filter_name,
+        rule_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Gets the specified rule from a route filter.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param route_filter_name: (str) – The name of the route filter.
+    :param rule_name: (str) – The name of the route filter rule.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: RouteFilterRule or ClientRawResponse if raw=true
+    """
+    try:
+        rfr_info = network_client.route_filter_rules.get(
+            resource_group_name,
+            route_filter_name,
+            rule_name,
+            custom_headers=None,
+            raw=False
+        )
+        return (rfr_info)
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
+
+def delete_route_filter_rules(
+        resource_group_name,
+        route_filter_name,
+        rule_name,
+        custom_headers=None,
+        raw=False
+):
+    """
+    Deletes the specified rule from a route filter.
+
+    :param resource_group_name: (str) – The name of the resource group.
+    :param route_filter_name: (str) – The name of the route filter.
+    :param rule_name: (str) – The name of the route filter rule.
+    :param custom_headers: (dict) – headers that will be added to the request
+    :param raw: (bool) – returns the direct response alongside the deserialized
+        response
+    :return: AzureOperationPoller instance that returns None or
+        ClientRawResponse if raw=true
+    """
+    try:
+        rfr_info = network_client.route_filter_rules.delete(
+            resource_group_name,
+            route_filter_name,
+            rule_name,
+            custom_headers=None,
+            raw=None
+        )
+        rfr_info.wait()
+        print(rfr_info.status())
+
+    except azure_exceptions.CloudError as e:
+        print(e)
+
 
 
 # END OF CUMULUS.PY

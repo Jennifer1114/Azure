@@ -1,5 +1,6 @@
 import models.data.pgm_core_data as data
 import models.data.parameters as parameters
+import re
 
 # Resource ID Construction
 # ************************
@@ -55,10 +56,10 @@ def workflow_summary(resource_set):
     """
 
     for resource in resource_set:
-        print_item(resource)
+        print_resource(resource)
 
 
-def print_item(resource):
+def print_resource(resource):
     """
     Print resource parameters.
 
@@ -74,10 +75,10 @@ def print_item(resource):
 
     if hasattr(resource, 'type'):
         print('\t\tParameters:')
-        print_parameters(resource, 0)
+        print_parameters(resource)
 
 
-def print_parameters(resource, level=0):
+def print_parameters(resource):
     """
     Print resource parameters based on type.
 
@@ -85,20 +86,22 @@ def print_parameters(resource, level=0):
     :param level: recursively track stuff
     :return: none
     """
-    # param_list = []
-    #
-    # for key, value in resource.__dict__.items():
-    #     if key == 'type':
-    #         param_list = parameters.params_by_type[value]
 
-    # for key, value in resource.__dict__.items():
-    #     # if key in param_list:
-    #     print('\t\t\t{}: {}'.format(key, value))
+    key = getattr(resource, '_attribute_map')
+    value = getattr(resource, '__dict__')
 
-    for attr in dir(resource):
-        if attr != '__doc__' and attr != '__module__':
-            val = getattr(resource, attr)
-            if isinstance(val, (int, str, list, dict)):
-                print('{}: {}'.format(attr, val))
-            else:
-                print_parameters(val, level=level+1)
+    for (k,v), (k2,v2) in zip(key.items(), value.items()):
+        print('\t\t\t{}:'.format(k))
+        if v['type'] == '[FrontendIPConfiguration]':
+            print_subparameters(v2)
+
+
+def print_subparameters(parameter):
+
+    # items = getattr(parameter)
+    for item in parameter:
+        value = getattr(item, '__dict__')
+        for k, v in value.items():
+            print('\t\t\t\t{}: {}'.format(k, v))
+            if k == 'load_balancing_rules':
+                print_subparameters(v)
