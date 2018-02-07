@@ -1,5 +1,6 @@
 import operations.cumulus_operations as cumulus
 import models.data.pgm_test_data as test_data
+import operations.my_operations as resource
 
 # import logging
 # logging.basicConfig(level=logging.DEBUG)
@@ -44,6 +45,8 @@ GW_IP_NAME = test_data.GW_IP_NAME
 PEER_GW_NAME = test_data.PEER_GW_NAME
 CONNECTION = test_data.CONNECTION
 
+resource_set = []
+
 
 # Create Resource Group
 #**********************
@@ -52,9 +55,9 @@ print("Creating resource group...")
 
 rg_parameters = {'location': location}
 
-cumulus.create_update_resource_group(
-    GROUP_NAME,
-    rg_parameters)
+# cumulus.create_update_resource_group(
+#     GROUP_NAME,
+#     rg_parameters)
 
 
 # Create Express Route Circuit
@@ -72,11 +75,16 @@ erc_parameters = {'location': location,
                        'tier': 'Premium',
                        'family': 'MeteredData'}}
 
-cumulus.create_update_express_route_circuits(
-    GROUP_NAME,
-    CIRCUIT_NAME,
-    erc_parameters
-)
+# cumulus.create_update_express_route_circuits(
+#     GROUP_NAME,
+#     CIRCUIT_NAME,
+#     erc_parameters)
+
+
+resource_set.append(
+    cumulus.get_express_route_circuits(
+        GROUP_NAME,
+        CIRCUIT_NAME))
 
 
 # Create Express Route Circuit Peering
@@ -90,12 +98,18 @@ ercp_parameters = {'peering_type': 'AzurePrivatePeering',
                    'secondary_peer_address_prefix': SECONDARY_PEER_PREFIX,
                    'vlan_id': PEER_VLAN_ID}
 
-cumulus.create_update_express_route_circuit_peerings(
-    GROUP_NAME,
-    CIRCUIT_NAME,
-    CIRCUIT_PEERING_NAME,
-    ercp_parameters
-)
+# cumulus.create_update_express_route_circuit_peerings(
+#     GROUP_NAME,
+#     CIRCUIT_NAME,
+#     CIRCUIT_PEERING_NAME,
+#     ercp_parameters)
+
+
+resource_set.append(
+    cumulus.get_express_route_circuit_peerings(
+        GROUP_NAME,
+        CIRCUIT_NAME,
+        CIRCUIT_PEERING_NAME))
 
 
 # Create Express Route Circuit Authorization
@@ -105,12 +119,18 @@ print("Creating express route circuit authorization...")
 
 erca_parameters = {}
 
-cumulus.create_update_express_route_circuit_authorizations(
-    GROUP_NAME,
-    CIRCUIT_NAME,
-    CIRCUIT_AUTHORIZATION_NAME,
-    erca_parameters
-)
+# cumulus.create_update_express_route_circuit_authorizations(
+#     GROUP_NAME,
+#     CIRCUIT_NAME,
+#     CIRCUIT_AUTHORIZATION_NAME,
+#     erca_parameters)
+
+
+resource_set.append(
+    cumulus.get_express_route_circuit_authorizations(
+        GROUP_NAME,
+        CIRCUIT_NAME,
+        CIRCUIT_AUTHORIZATION_NAME))
 
 
 # Create Virtual Network
@@ -122,11 +142,16 @@ vnet_parameters = {'location': location,
                    'address_space':
                        {'address_prefixes': VNET_PREFIXES}}
 
-cumulus.create_update_virtual_networks(
-    GROUP_NAME,
-    VNET_NAME,
-    vnet_parameters
-)
+# cumulus.create_update_virtual_networks(
+#     GROUP_NAME,
+#     VNET_NAME,
+#     vnet_parameters)
+
+
+resource_set.append(
+    cumulus.get_virtual_networks(
+        GROUP_NAME,
+        VNET_NAME))
 
 
 # Create Subnet
@@ -136,28 +161,35 @@ print("Creating gateway subnet...")
 
 subnet_parameters = {'address_prefix': GW_SUBNET_PREFIX}
 
-cumulus.create_update_subnets(
-    GROUP_NAME,
-    VNET_NAME,
-    GW_SUBNET_NAME,
-    subnet_parameters
-)
+# cumulus.create_update_subnets(
+#     GROUP_NAME,
+#     VNET_NAME,
+#     GW_SUBNET_NAME,
+#     subnet_parameters)
+
+
+resource_set.append(
+    cumulus.get_subnets(
+        GROUP_NAME,
+        VNET_NAME,
+        GW_SUBNET_NAME))
 
 print("Creating front end subnet...")
 
 subnet_parameters = {'address_prefix': SUBNET_PREFIX}
 
-cumulus.create_update_subnets(
-    GROUP_NAME,
-    VNET_NAME,
-    SUBNET_NAME,
-    subnet_parameters
-)
+# cumulus.create_update_subnets(
+#     GROUP_NAME,
+#     VNET_NAME,
+#     SUBNET_NAME,
+#     subnet_parameters)
 
-subnet_info = cumulus.get_subnets(
-    GROUP_NAME,
-    VNET_NAME,
-    SUBNET_NAME)
+
+resource_set.append(
+    cumulus.get_subnets(
+        GROUP_NAME,
+        VNET_NAME,
+        SUBNET_NAME))
 
 
 # Create Public IP Address
@@ -168,10 +200,16 @@ print("Creating Public IP Address...")
 pip_parameters = {'location': location,
                   'public_ip_allocation_method': 'Dynamic'}
 
-cumulus.create_update_public_ip_addresses(
-    GROUP_NAME,
-    GW_IP_NAME,
-    pip_parameters)
+# cumulus.create_update_public_ip_addresses(
+#     GROUP_NAME,
+#     GW_IP_NAME,
+#     pip_parameters)
+
+
+resource_set.append(
+    cumulus.get_public_ip_addresses(
+        GROUP_NAME,
+        GW_IP_NAME))
 
 
 # Create Virtual Network Gateway
@@ -200,10 +238,16 @@ vng_parameters = {'location': location,
                       'name': 'Standard',
                       'tier': 'Standard'}}
 
-cumulus.create_update_virtual_network_gateways(
-    GROUP_NAME,
-    PEER_GW_NAME,
-    vng_parameters)
+# cumulus.create_update_virtual_network_gateways(
+#     GROUP_NAME,
+#     PEER_GW_NAME,
+#     vng_parameters)
+
+
+resource_set.append(
+    cumulus.get_virtual_network_gateways(
+        GROUP_NAME,
+        PEER_GW_NAME))
 
 
 # Create Virtual Network Gateway Connection
@@ -227,7 +271,21 @@ vngc_parameters = {'location': location,
                        'id': express_route_circuit_peering_info.id}
                    }
 
-cumulus.create_update_virtual_network_gateway_connections(
-    GROUP_NAME,
-    CONNECTION,
-    vngc_parameters)
+# cumulus.create_update_virtual_network_gateway_connections(
+#     GROUP_NAME,
+#     CONNECTION,
+#     vngc_parameters)
+
+
+resource_set.append(
+    cumulus.get_virtual_network_gateway_connections(
+        GROUP_NAME,
+        CONNECTION))
+
+
+print("Summary of resources created in the express route workflow...")
+
+resource.workflow_summary(resource_set)
+
+
+# ------------------------- END OF EXPRESS_ROUTE_WORKFLOW.PY -----------------

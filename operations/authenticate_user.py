@@ -1,4 +1,4 @@
-import models.data.pgm_core_data as data
+import models.data.pgm_test_data as data
 
 from msrestazure.azure_cloud import AZURE_US_GOV_CLOUD
 from azure.mgmt.network import NetworkManagementClient

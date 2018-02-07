@@ -1,6 +1,7 @@
-import models.data.pgm_core_data as data
+import models.data.pgm_test_data as data
 import models.data.parameters as parameters
-import re
+import pyark
+
 
 # Resource ID Construction
 # ************************
@@ -91,9 +92,8 @@ def print_parameters(resource):
     value = getattr(resource, '__dict__')
 
     for (k,v), (k2,v2) in zip(key.items(), value.items()):
-        print('\t\t\t{}:'.format(k))
-        if v['type'] == '[FrontendIPConfiguration]':
-            print_subparameters(v2)
+        print('\t\t\t{}: {}'.format(k, v2))
+        #print_subparameters(v2)
 
 
 def print_subparameters(parameter):
@@ -103,5 +103,10 @@ def print_subparameters(parameter):
         value = getattr(item, '__dict__')
         for k, v in value.items():
             print('\t\t\t\t{}: {}'.format(k, v))
-            if k == 'load_balancing_rules':
-                print_subparameters(v)
+            #print_subparameters(v)
+
+
+
+# Cyberark Password Account Functions
+# ***********************************
+# https://github.com/adfinis-sygroup/pyark
